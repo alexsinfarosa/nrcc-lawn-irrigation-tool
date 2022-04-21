@@ -54,7 +54,7 @@ export default function Index() {
               </div>
               <a
                 href="https://www.nrcc.cornell.edu/"
-                className="mt-10 block text-center text-7xl text-white"
+                className="mt-10 block text-center text-7xl font-extrabold text-white"
               >
                 NRCC
               </a>

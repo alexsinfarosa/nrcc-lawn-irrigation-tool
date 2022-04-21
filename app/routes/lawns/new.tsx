@@ -22,7 +22,7 @@ type ActionData = {
 
 export const loader: LoaderFunction = async () => {
   return json({
-    GOOGLEPLACES_API_KEY: process.env.GOOGLEPLACES_API_KEY,
+    GOOGLEPLACES_API: process.env.GOOGLEPLACES_API,
   });
 };
 
@@ -120,7 +120,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewFieldPage() {
-  const { GOOGLEPLACES_API_KEY } = useLoaderData();
+  const { GOOGLEPLACES_API } = useLoaderData();
   const actionData = useActionData() as ActionData;
 
   const nameRef = React.useRef<HTMLInputElement>(null);
@@ -228,7 +228,7 @@ export default function NewFieldPage() {
           </label>
           <div className="mt-1">
             <GooglePlacesAutocomplete
-              apiKey={GOOGLEPLACES_API_KEY}
+              apiKey={GOOGLEPLACES_API}
               selectProps={{
                 name: "placeId",
                 id: "place-id",
