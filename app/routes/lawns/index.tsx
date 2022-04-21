@@ -1,12 +1,10 @@
 import { Link } from "@remix-run/react";
 
-export default function NoteIndexPage() {
+export default function LawnIndexPage() {
   return (
-    <p>
-      No note selected. Select a note on the left, or{" "}
-      <Link to="new" className="text-blue-500 underline">
-        create a new note.
-      </Link>
+    <p className="prose prose-a:text-blue-600 hover:prose-a:text-blue-500">
+      No lawn selected. Select a lawn on the left, or{" "}
+      <Link to="new">create a new lawn.</Link>
     </p>
   );
 }

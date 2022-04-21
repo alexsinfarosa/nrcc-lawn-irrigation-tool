@@ -8,31 +8,51 @@ generator client {
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  password Password?
-  notes    Note[]
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  Password?
+  lawns     Lawn[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Password {
-  hash String
-
+  hash   String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
 }
 
-model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
+model Lawn {
+  id             String  @id @default(cuid())
+  name           String
+  placeId        String
+  waterOrdinance String?
+  address        String
+  lat            Float
+  lng            Float
+  year           String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  sprName                   String
+  sprDuration               Float  @default(1)
+  sprRate                   Float  @default(1)
+  sprDistributionUniformity Float  @default(1)
+  sprSprayEfficiencyFactor  Float  @default(1)
+  sprWater                  Float  @default(0)
+
+  irrigations Irrigation[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Irrigation {
+  id    String @id @default(cuid())
+  date  String
+  water Float  @default(0)
+
+  lawn   Lawn   @relation(fields: [lawnId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  lawnId String
 }

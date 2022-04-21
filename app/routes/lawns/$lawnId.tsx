@@ -1,68 +1,133 @@
+import type { Irrigation, Lawn } from "@prisma/client";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
+import { useCatch, useLoaderData } from "@remix-run/react";
 
-import type { Note } from "~/models/note.server";
-import { deleteNote } from "~/models/note.server";
-import { getNote } from "~/models/note.server";
+import invariant from "tiny-invariant";
+import Table from "~/components/table";
+
+import { deleteLawn } from "~/models/lawn.server";
+import { getLawn } from "~/models/lawn.server";
 import { requireUserId } from "~/session.server";
+import type { PETDATA } from "~/types";
+import { getPET, runModel, getToday } from "~/utils";
+import Header from "~/components/header";
+import {
+  createIrrigation,
+  deleteIrrigation,
+  findIrrigation,
+  getIrrigations,
+} from "~/models/irrigation.server";
 
 type LoaderData = {
-  note: Note;
+  lawn: Lawn;
+  petData: PETDATA;
+  irrigationDates: Irrigation[];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
-  invariant(params.noteId, "noteId not found");
+  invariant(params.lawnId, "lawnId not found");
 
-  const note = await getNote({ userId, id: params.noteId });
-  if (!note) {
+  const lawn = await getLawn({ userId, id: params.lawnId });
+  if (!lawn) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json<LoaderData>({ note });
+
+  const irrigationDates = await getIrrigations({ lawnId: lawn.id });
+  const petData: PETDATA = await getPET({
+    year: lawn.year,
+    lat: lawn.lat,
+    lon: lawn.lng,
+  });
+
+  return json<LoaderData>({ lawn, petData, irrigationDates });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
-  invariant(params.noteId, "noteId not found");
+  invariant(params.lawnId, "lawnId not found");
 
-  await deleteNote({ userId, id: params.noteId });
+  let formData = await request.formData();
+  let { _action, ...value } = Object.fromEntries(formData);
 
-  return redirect("/notes");
+  if (_action === "delete") {
+    await deleteLawn({ userId, id: params.lawnId });
+    return redirect("/lawns");
+  }
+
+  if (_action === "water") {
+    const date = value.date.toString();
+    const sprWater = value.sprWater;
+    const found = await findIrrigation({ lawnId: params.lawnId, date });
+    if (found) {
+      await deleteIrrigation({ lawnId: params.lawnId, date: found.date });
+    } else {
+      await createIrrigation({
+        lawnId: params.lawnId,
+        date,
+        water: +sprWater,
+      });
+    }
+    return null;
+  }
 };
 
-export default function NoteDetailsPage() {
+export default function LawnDetailsPage() {
   const data = useLoaderData() as LoaderData;
+  const { lawn, petData, irrigationDates } = data;
+
+  const threshold: number = -1.6 * ((lawn.sprRate * lawn.sprDuration) / 60);
+  const waterDeficit = runModel(
+    petData,
+    threshold,
+    lawn.waterOrdinance,
+    lawn.year,
+    irrigationDates
+  );
+
+  // console.log({ petData });
+  // console.log({ waterDeficit });
+
+  const todayIdx = waterDeficit.findIndex((d) => d.date === getToday());
+
+  let today;
+  let slicedWaterDeficit;
+  if (todayIdx > -1) {
+    today = waterDeficit[todayIdx];
+    slicedWaterDeficit = waterDeficit.slice(todayIdx - 5, todayIdx + 3);
+  } else {
+    slicedWaterDeficit = waterDeficit;
+  }
+  const reversedWaterDeficit = slicedWaterDeficit.sort((a, b) =>
+    a.date < b.date ? 1 : b.date < a.date ? -1 : 0
+  );
 
   return (
-    <div>
-      <h3 className="text-2xl font-bold">{data.note.title}</h3>
-      <p className="py-6">{data.note.body}</p>
-      <hr className="my-4" />
-      <Form method="post">
-        <button
-          type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
-          Delete
-        </button>
-      </Form>
-    </div>
+    <>
+      <Header lawn={lawn}></Header>
+      <Table
+        data={reversedWaterDeficit}
+        today={today}
+        sprWater={lawn.sprWater}
+        year={lawn.year}
+        waterOrdinance={lawn.waterOrdinance}
+      ></Table>
+    </>
   );
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
 
-  return <div>An unexpected error occurred: {error.message}</div>;
+  return <p className="prose">An unexpected error occurred: {error.message}</p>;
 }
 
 export function CatchBoundary() {
   const caught = useCatch();
 
   if (caught.status === 404) {
-    return <div>Note not found</div>;
+    return <p className="prose">Lawn not found</p>;
   }
 
   throw new Error(`Unexpected caught response with status: ${caught.status}`);
