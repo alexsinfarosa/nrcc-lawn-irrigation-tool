@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import type { User } from "~/models/user.server";
 import { MODEL_DATA } from "./constants";
+import type { Irrigation } from "./models/irrigation.server";
 import type { PETDATA } from "./types";
 import { SoilMoistureOptionLevel } from "./types";
 
