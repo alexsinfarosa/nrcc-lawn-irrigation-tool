@@ -80,7 +80,7 @@ export async function placeIdToLatLon(placeId: string): Promise<{
   lng: number;
 }> {
   const res = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${process.env.GOOGLEPLACES_API_KEY}`
+    `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${process.env.GOOGLEPLACES_API}`
   );
   if (!res.ok) {
     throw new Error(`HTTP error! status: ${res.status}`);
