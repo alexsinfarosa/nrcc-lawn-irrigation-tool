@@ -27,7 +27,7 @@ export default function Table({
                 Water
               </span>
             ) : (
-              <span className="inline-flex items-center rounded-md bg-yellow-100 px-3 py-1 font-medium text-yellow-800">
+              <span className="inline-flex items-center rounded-md bg-amber-100 px-3 py-1 font-medium text-amber-800">
                 Don't water
               </span>
             )}
@@ -110,7 +110,15 @@ function Row({
         {day.date}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-        {day.shouldWater ? "water" : "Don't water"}
+        {day.shouldWater ? (
+          <span className="inline-flex items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
+            Water
+          </span>
+        ) : (
+          <span className="inline-flex items-center rounded-md bg-amber-100 px-3 py-1 font-medium text-amber-800">
+            Don't water
+          </span>
+        )}
       </td>
 
       <td
@@ -129,9 +137,9 @@ function Row({
             <input type="hidden" name="date" value={day.date} />
             <input type="hidden" name="sprWater" value={sprWater} />
             {disabled ? (
-              <span className="inline-flex px-3 py-1.5 text-sm font-medium">
+              <span className="inline-flex px-3 py-1.5 text-xs font-semibold">
                 {" "}
-                -{" "}
+                Water Ordinance{" "}
               </span>
             ) : (
               <button

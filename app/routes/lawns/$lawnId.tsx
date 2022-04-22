@@ -81,7 +81,10 @@ export default function LawnDetailsPage() {
   const data = useLoaderData() as LoaderData;
   const { lawn, petData, irrigationDates } = data;
 
-  const threshold: number = -1.6 * ((lawn.sprRate * lawn.sprDuration) / 60);
+  // TODO: check the namber below
+  const NUMBER_TO_CHECK: number = 0.2; // was 1.6
+  const threshold: number =
+    -NUMBER_TO_CHECK * ((lawn.sprRate * lawn.sprDuration) / 60);
   const waterDeficit = runModel(
     petData,
     threshold,
@@ -89,9 +92,6 @@ export default function LawnDetailsPage() {
     lawn.year,
     irrigationDates
   );
-
-  // console.log({ petData });
-  // console.log({ waterDeficit });
 
   const todayIdx = waterDeficit.findIndex((d) => d.date === getToday());
 

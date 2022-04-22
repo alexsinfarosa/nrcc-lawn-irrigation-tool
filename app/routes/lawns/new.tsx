@@ -12,7 +12,7 @@ import { createLawn } from "~/models/lawn.server";
 import { requireUserId } from "~/session.server";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import SelectSprinkler from "~/components/select-sprinkler";
-import { placeIdToLatLon } from "~/utils";
+import { isInBBOX, placeIdToLatLon } from "~/utils";
 import { calculateWaterAmount } from "~/utils";
 import { createIrrigation } from "~/models/irrigation.server";
 
@@ -59,11 +59,10 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Response("Not Found", { status: 404 });
   }
 
-  // const isValidLocation = isInBBOX(location.lat, location.lng);
-  const isValidLocation = true;
+  const isValidLocation = isInBBOX(location.lat, location.lng);
   if (!isValidLocation) {
     return json<ActionData>(
-      { errors: { placeId: "No data is available at this address" } },
+      { errors: { placeId: "No data is available at this location" } },
       { status: 400 }
     );
   }
