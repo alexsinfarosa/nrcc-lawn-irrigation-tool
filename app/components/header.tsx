@@ -1,16 +1,19 @@
 import { Menu, Transition } from "@headlessui/react";
 import {
   CalendarIcon,
-  DotsVerticalIcon,
+  ChevronDownIcon,
   LocationMarkerIcon,
+  LogoutIcon,
+  PlusIcon,
   StarIcon,
+  TrashIcon,
 } from "@heroicons/react/solid";
 import type { Lawn } from "@prisma/client";
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import clsx from "clsx";
 import { Fragment } from "react";
 
-export default function Header({ lawn }: { lawn: Lawn }) {
+export default function Header({ lawn, email }: { lawn: Lawn; email: string }) {
   return (
     <div className="border-b border-gray-200 pb-5">
       <div className="sm:flex sm:items-baseline sm:justify-between">
@@ -49,14 +52,14 @@ export default function Header({ lawn }: { lawn: Lawn }) {
         </div>
 
         <div className="mt-4 flex items-center justify-end sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
-          <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-800">
-            Menu
-          </span>
-          <Menu as="div" className="relative ml-1 inline-block text-left">
+          <Menu as="div" className="relative z-10 inline-block text-left">
             <div>
-              <Menu.Button className="-my-2 flex items-center rounded-full bg-white p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <span className="sr-only">Open options</span>
-                <DotsVerticalIcon className="h-7 w-7" aria-hidden="true" />
+              <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+                Menu
+                <ChevronDownIcon
+                  className="-mr-1 ml-2 h-5 w-5"
+                  aria-hidden="true"
+                />
               </Menu.Button>
             </div>
 
@@ -69,7 +72,36 @@ export default function Header({ lawn }: { lawn: Lawn }) {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="px-4 py-3">
+                  <p className="text-sm">Signed in as</p>
+                  <p className="truncate text-sm font-medium text-gray-900">
+                    {email}
+                  </p>
+                </div>
+                <div className="py-1">
+                  <Form method="post">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          to="/lawns/new"
+                          className={clsx(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "group flex items-center px-4 py-2 text-sm"
+                          )}
+                        >
+                          <PlusIcon
+                            className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                          />
+                          New Lawn
+                        </Link>
+                      )}
+                    </Menu.Item>
+                  </Form>
+                </div>
                 <div className="py-1">
                   <Menu.Item>
                     {({ active }) => (
@@ -82,10 +114,37 @@ export default function Header({ lawn }: { lawn: Lawn }) {
                             active
                               ? "bg-gray-100 text-gray-900"
                               : "text-gray-700",
-                            "flex w-full justify-between px-4 py-2 text-sm"
+                            "group flex w-full items-center px-4 py-2 text-sm"
                           )}
                         >
-                          <span>Delete Lawn</span>
+                          <TrashIcon
+                            className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                          />
+                          Delete Lawn
+                        </button>
+                      </Form>
+                    )}
+                  </Menu.Item>
+                </div>
+                <div className="py-1">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Form action="/logout" method="post">
+                        <button
+                          type="submit"
+                          className={clsx(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "group flex w-full items-center px-4 py-2 text-sm"
+                          )}
+                        >
+                          <LogoutIcon
+                            className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                          />
+                          Log out
                         </button>
                       </Form>
                     )}

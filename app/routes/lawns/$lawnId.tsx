@@ -10,7 +10,7 @@ import { deleteLawn } from "~/models/lawn.server";
 import { getLawn } from "~/models/lawn.server";
 import { requireUserId } from "~/session.server";
 import type { PETDATA } from "~/types";
-import { getPET, runModel, getToday } from "~/utils";
+import { getPET, runModel, getToday, useUser } from "~/utils";
 import Header from "~/components/header";
 import {
   createIrrigation,
@@ -70,7 +70,7 @@ export const action: ActionFunction = async ({ request, params }) => {
           water: +sprWater,
         });
       }
-      return json({});
+      return null;
     } catch (error) {
       return json({ error: true });
     }
@@ -80,6 +80,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function LawnDetailsPage() {
   const data = useLoaderData() as LoaderData;
   const { lawn, petData, irrigationDates } = data;
+  const user = useUser();
 
   // TODO: check the namber below
   const NUMBER_TO_CHECK: number = 0.2; // was 1.6
@@ -109,7 +110,7 @@ export default function LawnDetailsPage() {
 
   return (
     <>
-      <Header lawn={lawn}></Header>
+      <Header lawn={lawn} email={user.email}></Header>
       <Table
         data={reversedWaterDeficit}
         today={today}

@@ -4,10 +4,9 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 
 import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
 import { getLawnListItems } from "~/models/lawn.server";
 import nyWaterLogo from "../images/ny-water-logo.svg";
 
@@ -24,7 +23,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const data = useLoaderData() as LoaderData;
-  const user = useUser();
 
   return (
     <>
@@ -135,16 +133,6 @@ export default function Example() {
                   )}
                 </nav>
               </div>
-              <div className="flex flex-shrink-0 justify-center border-t border-gray-200 p-4">
-                <Form action="/logout" method="post">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Log out: {user.email}
-                  </button>
-                </Form>
-              </div>
             </div>
           </Transition.Child>
           <div className="w-14 flex-shrink-0">
@@ -212,17 +200,6 @@ export default function Example() {
                 </>
               )}
             </nav>
-          </div>
-          <div className="flex flex-shrink-0 flex-col border-t border-gray-200 p-4">
-            <Form action="/logout" method="post">
-              <button
-                type="submit"
-                className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Logout
-              </button>
-            </Form>
-            <div className="mt-1 text-sm text-gray-500">{user.email}</div>
           </div>
         </div>
       </div>
