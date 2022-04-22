@@ -1,35 +1,52 @@
-import React from "react";
+import format from "date-fns/format";
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
   ReferenceLine,
   ResponsiveContainer,
   Cell,
 } from "recharts";
 
+const gray300 = "#d1d5db";
+const gray500 = "#6b7280";
+// const gray800 = "#1f2937";
+
 export default function Graph({ data }: { data: any }) {
-  console.log(data);
   return (
-    <div className="-mx-4 mt-12 h-96 w-full bg-white sm:-mx-6 sm:shadow md:mx-0 md:rounded-lg">
+    <div className="-mx-4 mt-12 h-80 w-full bg-white sm:-mx-6 sm:shadow md:mx-0 md:rounded-lg">
       <ResponsiveContainer>
         <BarChart
           data={data}
           margin={{
-            top: 20,
+            top: 16,
             right: 0,
-            left: -20,
-            bottom: 20,
+            left: -30,
+            bottom: 16,
           }}
         >
-          {/* <XAxis dataKey="date" /> */}
-          <YAxis />
+          <XAxis
+            stroke={gray500}
+            dataKey="date"
+            axisLine={true}
+            tick={<CustomXLabel />}
+          ></XAxis>
+          <YAxis
+            stroke={gray500}
+            width={110}
+            dataKey="amount"
+            tick={<CustomYLabel />}
+            label={{
+              value: "Water Deficit (in)",
+              angle: -90,
+              position: "center",
+              offset: 0,
+            }}
+          />
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
-          <ReferenceLine y={0} stroke="#cbd5e1" />
+          <ReferenceLine y={0} stroke={gray300} />
           <Bar dataKey="amount">
             {data.map((day: any) => {
               return (
@@ -67,4 +84,41 @@ function CustomTooltip({ active, payload }: any) {
     );
   }
   return null;
+}
+
+function CustomXLabel({ x, y, payload }: any) {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={0}
+        dy={16}
+        fontSize={11}
+        textAnchor="middle"
+        fill={gray500}
+        transform="rotate(-25)"
+      >
+        {format(new Date(payload.value), "MMM d")}
+      </text>
+    </g>
+  );
+}
+
+function CustomYLabel({ x, y, payload, unit }: any) {
+  return (
+    <g>
+      <text
+        x={x}
+        y={y}
+        dy={5}
+        dx={-15}
+        fontSize={11}
+        textAnchor="middle"
+        fill={gray500}
+      >
+        {payload.value}
+        {unit}
+      </text>
+    </g>
+  );
 }
