@@ -412,7 +412,7 @@ export function getToday(): string {
 
 export function isInBBOX(lat: number, lon: number): boolean {
   return (
-    lat >= 40.58284 && lat <= 40.91561 && lon >= -73.76567 && lon <= -73.42468
+    lat >= 37.166667 && lat <= 47.625 && lon >= -82.70833 && lon <= -66.875
   );
 }
 

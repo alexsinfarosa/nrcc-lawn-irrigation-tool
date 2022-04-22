@@ -117,6 +117,7 @@ export default function Example() {
                       {data.lawnListItems.map((lawn) => (
                         <NavLink
                           key={lawn.id}
+                          prefetch="intent"
                           className={({ isActive }) =>
                             `group flex items-center rounded-md px-2 py-2 text-sm font-medium ${
                               isActive

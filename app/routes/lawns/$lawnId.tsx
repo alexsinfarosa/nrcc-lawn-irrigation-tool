@@ -57,19 +57,23 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   if (_action === "water") {
-    const date = value.date.toString();
-    const sprWater = value.sprWater;
-    const found = await findIrrigation({ lawnId: params.lawnId, date });
-    if (found) {
-      await deleteIrrigation({ lawnId: params.lawnId, date: found.date });
-    } else {
-      await createIrrigation({
-        lawnId: params.lawnId,
-        date,
-        water: +sprWater,
-      });
+    try {
+      const date = value.date.toString();
+      const sprWater = value.sprWater;
+      const found = await findIrrigation({ lawnId: params.lawnId, date });
+      if (found) {
+        await deleteIrrigation({ lawnId: params.lawnId, date: found.date });
+      } else {
+        await createIrrigation({
+          lawnId: params.lawnId,
+          date,
+          water: +sprWater,
+        });
+      }
+      return json({});
+    } catch (error) {
+      return json({ error: true });
     }
-    return null;
   }
 };
 

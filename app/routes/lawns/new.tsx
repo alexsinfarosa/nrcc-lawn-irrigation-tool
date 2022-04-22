@@ -1,6 +1,11 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  useActionData,
+  useLoaderData,
+  useTransition,
+} from "@remix-run/react";
 import * as React from "react";
 
 import { createLawn } from "~/models/lawn.server";
@@ -127,6 +132,9 @@ export default function NewFieldPage() {
   const placeIdRef = React.useRef<HTMLInputElement>(null);
   const sprinklerDurationRef = React.useRef<HTMLInputElement>(null);
   const sprinklerRateRef = React.useRef<HTMLInputElement>(null);
+
+  const transition = useTransition();
+  const isSaving = transition.submission;
 
   React.useEffect(() => {
     if (actionData?.errors?.name) {
@@ -319,7 +327,7 @@ export default function NewFieldPage() {
             type="submit"
             className="flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mx-auto sm:w-1/2"
           >
-            Save
+            {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
       </Form>
