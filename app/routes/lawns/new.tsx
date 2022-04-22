@@ -199,19 +199,19 @@ export default function NewFieldPage() {
           </p>
           <fieldset className="mt-4">
             <legend className="sr-only">Water Ordinance</legend>
-            <div className="space-y-4  sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+            <div className="flex items-center space-x-10">
               {[
                 { id: "odd", streetNumber: "Odd" },
                 { id: "even", streetNumber: "Even" },
               ].map((waterOrdinance) => (
-                <div key={waterOrdinance.id} className="flex items-center">
+                <div key={waterOrdinance.id} className="mt-1 flex items-center">
                   <input
                     id={waterOrdinance.id}
                     name="waterOrdinance"
                     type="radio"
                     value={waterOrdinance.id}
                     // defaultChecked={waterOrdinance.id === "odd"}
-                    className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="h-6 w-6 border-gray-300 text-blue-600 focus:ring-blue-500 sm:h-5 sm:w-5"
                     aria-describedby="water-ordinance-description"
                   />
                   <label

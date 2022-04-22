@@ -19,6 +19,8 @@ import {
   getIrrigations,
 } from "~/models/irrigation.server";
 
+import Graph from "~/components/graph";
+
 type LoaderData = {
   lawn: Lawn;
   petData: PETDATA;
@@ -118,6 +120,7 @@ export default function LawnDetailsPage() {
         year={lawn.year}
         waterOrdinance={lawn.waterOrdinance}
       ></Table>
+      <Graph data={waterDeficit}></Graph>
     </>
   );
 }

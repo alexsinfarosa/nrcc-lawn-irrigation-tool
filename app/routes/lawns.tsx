@@ -12,7 +12,6 @@ import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 
 import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
 import { getLawnListItems } from "~/models/lawn.server";
 import nyWaterLogo from "../images/ny-water-logo.svg";
 
@@ -29,7 +28,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const data = useLoaderData() as LoaderData;
-  const user = useUser();
 
   return (
     <>
@@ -148,7 +146,7 @@ export default function Example() {
                 <Form action="/logout" method="post">
                   <button
                     type="submit"
-                    className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                   >
                     <LogoutIcon
                       className="-ml-1 mr-2 h-5 w-5"
@@ -226,7 +224,7 @@ export default function Example() {
               )}
             </nav>
           </div>
-          <div className="flex flex-shrink-0 flex-col border-t border-gray-200 p-4">
+          <div className="flex flex-shrink-0 flex-col p-4">
             <Form
               action="/logout"
               method="post"
@@ -234,7 +232,7 @@ export default function Example() {
             >
               <button
                 type="submit"
-                className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
               >
                 <LogoutIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                 Logout

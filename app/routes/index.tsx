@@ -12,7 +12,7 @@ export default function Index() {
           <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
             <div className="absolute inset-0">
               <img
-                className="h-full w-full object-cover"
+                className="h-screen w-full object-cover sm:h-full"
                 src={backgroundImgUrl}
                 alt="Lawn"
               />
@@ -24,7 +24,7 @@ export default function Index() {
                   Welcome to CSF
                 </span>
               </h1>
-              <p className="mx-auto mt-6 max-w-lg text-center text-4xl font-semibold text-white sm:max-w-3xl">
+              <p className="mx-auto mt-6 max-w-lg text-center text-4xl font-semibold text-white sm:max-w-3xl sm:text-5xl">
                 Water Deficit Calculator
               </p>
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">

@@ -155,8 +155,8 @@ export default function LoginPage() {
           >
             Log in
           </button>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+          <div className="items-center justify-between space-y-6 sm:flex sm:space-y-0">
+            <div className="flex items-center justify-center">
               <input
                 id="remember"
                 name="remember"

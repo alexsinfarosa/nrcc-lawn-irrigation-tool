@@ -1,5 +1,8 @@
 import { useFetcher } from "@remix-run/react";
 import clsx from "clsx";
+import format from "date-fns/format";
+import isFuture from "date-fns/isFuture";
+import isToday from "date-fns/isToday";
 import type { WaterDeficit } from "~/types";
 
 export default function Table({
@@ -21,7 +24,7 @@ export default function Table({
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h2 className="text-lg font-medium leading-6 text-gray-900">
-            Recommendation for Today:{" "}
+            Today's Recommendation:{" "}
             {today && today.shouldWater ? (
               <span className="inline-flex items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
                 Water
@@ -107,7 +110,17 @@ function Row({
   return (
     <tr key={day.date} className={index % 2 === 0 ? undefined : "bg-gray-50"}>
       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-        {day.date}
+        {isToday(new Date(day.date)) ? (
+          <span className=" text-base font-bold">Today</span>
+        ) : (
+          format(new Date(day.date), "MMM d")
+        )}
+
+        {isFuture(new Date(day.date)) && (
+          <span className="block text-xs font-normal text-gray-500">
+            Forecast
+          </span>
+        )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
         {day.shouldWater ? (
@@ -138,8 +151,9 @@ function Row({
             <input type="hidden" name="sprWater" value={sprWater} />
             {disabled ? (
               <span className="inline-flex px-3 py-1.5 text-xs font-semibold">
-                {" "}
-                Water Ordinance{" "}
+                Water
+                <br />
+                Ordinance
               </span>
             ) : (
               <button
