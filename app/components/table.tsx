@@ -19,22 +19,31 @@ export default function Table({
   waterOrdinance: string | null;
 }) {
   const isThisYear = new Date().getFullYear().toString() === year;
+  const isTodayOdd = new Date().getDate() % 2 === 1;
+  const isTodayEven = new Date().getDate() % 2 === 0;
   return (
     <div className="mt-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h2 className="text-lg font-medium leading-6 text-gray-900">
-            Today's Recommendation:{" "}
-            {today && today.shouldWater ? (
-              <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
-                Water
-              </span>
-            ) : (
-              <span className="inline-flex items-center rounded-md bg-amber-100 px-3 py-1 font-medium text-amber-800">
-                Don't water
-              </span>
-            )}
-          </h2>
+          {(isTodayOdd && waterOrdinance === "odd") ||
+          (isTodayEven && waterOrdinance === "even") ? (
+            <h2 className="text-lg font-medium leading-6 text-gray-900">
+              Today is Not Allowed To Water - (water ordinance)
+            </h2>
+          ) : (
+            <h2 className="text-lg font-medium leading-6 text-gray-900">
+              Today's Recommendation:{" "}
+              {today && today.shouldWater ? (
+                <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
+                  Water
+                </span>
+              ) : (
+                <span className="inline-flex items-center rounded-md bg-amber-100 px-3 py-1 font-medium text-amber-800">
+                  Don't water
+                </span>
+              )}
+            </h2>
+          )}
         </div>
       </div>
       <div className="-mx-4 mt-8 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">

@@ -7,14 +7,13 @@ import {
   Tooltip,
   ReferenceLine,
   ResponsiveContainer,
-  LabelList,
+  Cell,
 } from "recharts";
 
 const gray300 = "#d1d5db";
-const gray400 = "#9ca3af";
 const gray500 = "#6b7280";
-// const amber500 = "#f59e0b";
-// const blue500 = "#3b82f6";
+const amber500 = "#f59e0b";
+const blue500 = "#3b82f6";
 const emerald600 = "#059669";
 
 export default function Graph({ data }: { data: any }) {
@@ -28,19 +27,16 @@ export default function Graph({ data }: { data: any }) {
             Water Deficit for the last {dataLength} days
           </h2>
         </div>
-        <div className="">
-          {/* <span className="bg-blue-500 px-2 py-1 text-sm font-medium text-white">
-            WET
+        <div className=" space-x-2">
+          <span className="bg-blue-500 px-2 py-1 text-sm font-medium text-white">
+            Wet
           </span>
           <span className="bg-amber-500 px-2 py-1 text-sm font-medium text-white">
-            DRY
-          </span> */}
-          <span className=" inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600">
-            <span className="text-sm font-medium leading-none text-white">
-              w
-            </span>
+            Dry
           </span>
-          <span className="text-gray-500"> = watered</span>
+          <span className="bg-emerald-600 px-2 py-1 text-sm font-medium text-white">
+            Watered
+          </span>
         </div>
       </div>
       <div className="-mx-4 mt-8 h-80 w-full bg-white sm:-mx-6 sm:shadow md:mx-0 md:rounded-lg">
@@ -74,42 +70,27 @@ export default function Graph({ data }: { data: any }) {
             />
             <Tooltip content={<CustomTooltip />} />
             <ReferenceLine y={0} stroke={gray300} />
-            <Bar dataKey="amount" fill={gray300}>
-              <LabelList dataKey="watered" content={renderCustomizedLabel} />
+            <Bar dataKey="amount">
+              {data.slice(-30).map((entry: any, index: number) => {
+                return (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      entry.watered
+                        ? emerald600
+                        : entry.amount < 0
+                        ? amber500
+                        : blue500
+                    }
+                  ></Cell>
+                );
+              })}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
     </>
   );
-}
-
-function renderCustomizedLabel({ x, y, width, value }: any) {
-  const radius = 9;
-  if (value) {
-    return (
-      <g className="mb-2">
-        <circle
-          cx={x + width / 2}
-          cy={y - radius}
-          r={radius}
-          fill={emerald600}
-        />
-        <text
-          x={x + width / 2}
-          y={y - radius}
-          fill="#fff"
-          fontSize={12}
-          fontWeight="medium"
-          textAnchor="middle"
-          dominantBaseline="middle"
-        >
-          w
-        </text>
-      </g>
-    );
-  }
-  return null;
 }
 
 function CustomTooltip({ active, payload }: any) {
