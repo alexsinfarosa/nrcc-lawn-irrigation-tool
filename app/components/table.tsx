@@ -26,7 +26,7 @@ export default function Table({
           <h2 className="text-lg font-medium leading-6 text-gray-900">
             Today's Recommendation:{" "}
             {today && today.shouldWater ? (
-              <span className="inline-flex items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
+              <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
                 Water
               </span>
             ) : (

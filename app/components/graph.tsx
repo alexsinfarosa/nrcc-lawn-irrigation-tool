@@ -8,59 +8,108 @@ import {
   ReferenceLine,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 
 const gray300 = "#d1d5db";
 const gray500 = "#6b7280";
-// const gray800 = "#1f2937";
+const amber500 = "#f59e0b";
+const blue500 = "#3b82f6";
+const emerald600 = "#059669";
 
 export default function Graph({ data }: { data: any }) {
   return (
-    <div className="-mx-4 mt-12 h-80 w-full bg-white sm:-mx-6 sm:shadow md:mx-0 md:rounded-lg">
-      <ResponsiveContainer>
-        <BarChart
-          data={data}
-          margin={{
-            top: 16,
-            right: 0,
-            left: -30,
-            bottom: 16,
-          }}
-        >
-          <XAxis
-            stroke={gray500}
-            dataKey="date"
-            axisLine={true}
-            tick={<CustomXLabel />}
-          ></XAxis>
-          <YAxis
-            stroke={gray500}
-            width={110}
-            dataKey="amount"
-            tick={<CustomYLabel />}
-            label={{
-              value: "Water Deficit (in)",
-              angle: -90,
-              position: "center",
-              offset: 0,
+    <>
+      <div className="mt-12 sm:flex sm:items-center">
+        <div className="sm:flex-auto">
+          <h2 className="text-lg font-medium leading-6 text-gray-900">
+            Water Deficit for the last 30 days
+          </h2>
+        </div>
+        <div className="space-x-2">
+          <span className="bg-blue-500 px-2 py-1 text-sm font-medium text-white">
+            WET
+          </span>
+          <span className="bg-amber-500 px-2 py-1 text-sm font-medium text-white">
+            DRY
+          </span>
+        </div>
+      </div>
+      <div className="-mx-4 mt-8 h-80 w-full bg-white sm:-mx-6 sm:shadow md:mx-0 md:rounded-lg">
+        <ResponsiveContainer>
+          <BarChart
+            data={data.slice(-30)}
+            margin={{
+              top: 16,
+              right: 16,
+              left: -30,
+              bottom: 16,
             }}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <ReferenceLine y={0} stroke={gray300} />
-          <Bar dataKey="amount">
-            {data.map((day: any) => {
-              return (
-                <Cell
-                  key={day.date}
-                  fill={day.amount < 0 ? "#f59e0b" : "#0284c7"}
-                />
-              );
-            })}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+          >
+            <XAxis
+              stroke={gray300}
+              dataKey="date"
+              axisLine={true}
+              tick={<CustomXLabel />}
+            ></XAxis>
+            <YAxis
+              stroke={gray300}
+              width={110}
+              dataKey="amount"
+              tick={<CustomYLabel />}
+              label={{
+                value: "Water Deficit (in)",
+                angle: -90,
+                position: "center",
+                offset: 0,
+              }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <ReferenceLine y={0} stroke={gray300} />
+            <Bar dataKey="amount">
+              <LabelList dataKey="watered" content={renderCustomizedLabel} />
+              {data.map((day: any) => {
+                return (
+                  <Cell
+                    key={day.date}
+                    fill={day.amount < 0 ? amber500 : blue500}
+                  />
+                );
+              })}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </>
   );
+}
+
+function renderCustomizedLabel({ x, y, width, value }: any) {
+  const radius = 8;
+  if (value) {
+    return (
+      <g className="mb-2">
+        <circle
+          cx={x + width / 2}
+          cy={y - radius}
+          r={radius}
+          fill={emerald600}
+        />
+        <text
+          x={x + width / 2}
+          y={y - radius}
+          fill="#fff"
+          fontSize={12}
+          fontWeight="medium"
+          textAnchor="middle"
+          dominantBaseline="middle"
+        >
+          w
+        </text>
+      </g>
+    );
+  }
+  return null;
 }
 
 function CustomTooltip({ active, payload }: any) {
@@ -70,7 +119,7 @@ function CustomTooltip({ active, payload }: any) {
       <div className="relative inline-block max-w-xs transform space-y-2 overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 sm:align-middle">
         <p className="text-sm text-gray-500">
           <span className="font-bold">Date: </span>
-          {date}
+          {format(new Date(date), "MMM d")}
         </p>
         <p className="text-sm text-gray-500">
           <span className="font-bold">Deficit: </span>

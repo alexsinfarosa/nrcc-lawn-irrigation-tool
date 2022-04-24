@@ -102,7 +102,7 @@ export default function LawnDetailsPage() {
   let slicedWaterDeficit;
   if (todayIdx > -1) {
     today = waterDeficit[todayIdx];
-    slicedWaterDeficit = waterDeficit.slice(todayIdx - 5, todayIdx + 3);
+    slicedWaterDeficit = waterDeficit.slice(todayIdx - 4, todayIdx + 3);
   } else {
     slicedWaterDeficit = waterDeficit;
   }
