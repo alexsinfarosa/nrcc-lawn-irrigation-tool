@@ -7,18 +7,19 @@ import {
   Tooltip,
   ReferenceLine,
   ResponsiveContainer,
-  Cell,
   LabelList,
 } from "recharts";
 
 const gray300 = "#d1d5db";
+const gray400 = "#9ca3af";
 const gray500 = "#6b7280";
-const amber500 = "#f59e0b";
-const blue500 = "#3b82f6";
+// const amber500 = "#f59e0b";
+// const blue500 = "#3b82f6";
 const emerald600 = "#059669";
 
 export default function Graph({ data }: { data: any }) {
   const dataLength = data.length >= 30 ? 30 : data.length;
+
   return (
     <>
       <div className="mt-12 sm:flex sm:items-center">
@@ -27,13 +28,19 @@ export default function Graph({ data }: { data: any }) {
             Water Deficit for the last {dataLength} days
           </h2>
         </div>
-        <div className="space-x-2">
-          <span className="bg-blue-500 px-2 py-1 text-sm font-medium text-white">
+        <div className="">
+          {/* <span className="bg-blue-500 px-2 py-1 text-sm font-medium text-white">
             WET
           </span>
           <span className="bg-amber-500 px-2 py-1 text-sm font-medium text-white">
             DRY
+          </span> */}
+          <span className=" inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600">
+            <span className="text-sm font-medium leading-none text-white">
+              w
+            </span>
           </span>
+          <span className="text-gray-500"> = watered</span>
         </div>
       </div>
       <div className="-mx-4 mt-8 h-80 w-full bg-white sm:-mx-6 sm:shadow md:mx-0 md:rounded-lg">
@@ -55,7 +62,7 @@ export default function Graph({ data }: { data: any }) {
             ></XAxis>
             <YAxis
               stroke={gray300}
-              width={110}
+              width={100}
               dataKey="amount"
               tick={<CustomYLabel />}
               label={{
@@ -67,17 +74,8 @@ export default function Graph({ data }: { data: any }) {
             />
             <Tooltip content={<CustomTooltip />} />
             <ReferenceLine y={0} stroke={gray300} />
-            <Bar dataKey="amount">
+            <Bar dataKey="amount" fill={gray300}>
               <LabelList dataKey="watered" content={renderCustomizedLabel} />
-              {data.map((day: any) => {
-                console.log(day);
-                return (
-                  <Cell
-                    key={day.date}
-                    fill={day.amount < 0 ? amber500 : blue500}
-                  />
-                );
-              })}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
@@ -87,7 +85,7 @@ export default function Graph({ data }: { data: any }) {
 }
 
 function renderCustomizedLabel({ x, y, width, value }: any) {
-  const radius = 8;
+  const radius = 9;
   if (value) {
     return (
       <g className="mb-2">

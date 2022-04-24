@@ -395,7 +395,7 @@ export function runModel(
 
     return {
       date,
-      amount: +deficitDaily[idx].toFixed(3),
+      amount: deficitDaily[idx],
       shouldWater,
       watered,
     };
