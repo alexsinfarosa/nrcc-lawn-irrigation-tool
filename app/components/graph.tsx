@@ -18,12 +18,13 @@ const blue500 = "#3b82f6";
 const emerald600 = "#059669";
 
 export default function Graph({ data }: { data: any }) {
+  const dataLength = data.length >= 30 ? 30 : data.length;
   return (
     <>
       <div className="mt-12 sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h2 className="text-lg font-medium leading-6 text-gray-900">
-            Water Deficit for the last 30 days
+            Water Deficit for the last {dataLength} days
           </h2>
         </div>
         <div className="space-x-2">

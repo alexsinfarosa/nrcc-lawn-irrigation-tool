@@ -120,7 +120,7 @@ export default function LawnDetailsPage() {
         year={lawn.year}
         waterOrdinance={lawn.waterOrdinance}
       ></Table>
-      <Graph data={waterDeficit}></Graph>
+      {waterDeficit.length > 7 && <Graph data={waterDeficit}></Graph>}
     </>
   );
 }
