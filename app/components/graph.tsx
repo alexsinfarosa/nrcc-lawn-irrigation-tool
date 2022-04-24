@@ -70,6 +70,7 @@ export default function Graph({ data }: { data: any }) {
             <Bar dataKey="amount">
               <LabelList dataKey="watered" content={renderCustomizedLabel} />
               {data.map((day: any) => {
+                console.log(day);
                 return (
                   <Cell
                     key={day.date}
