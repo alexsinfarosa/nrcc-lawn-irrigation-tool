@@ -260,8 +260,8 @@ export default function NewFieldPage() {
               }}
               autocompletionRequest={{
                 bounds: [
-                  { lat: 40.58284, lng: -73.76567 },
-                  { lat: 40.91561, lng: -73.42468 },
+                  { lat: 37.166667, lng: -82.70833 },
+                  { lat: 47.625, lng: -66.875 },
                 ],
                 componentRestrictions: {
                   country: ["us"],

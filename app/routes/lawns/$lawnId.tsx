@@ -88,6 +88,7 @@ export default function LawnDetailsPage() {
   const NUMBER_TO_CHECK: number = 0.2; // was 1.6
   const threshold: number =
     -NUMBER_TO_CHECK * ((lawn.sprRate * lawn.sprDuration) / 60);
+
   const waterDeficit = runModel(
     petData,
     threshold,
