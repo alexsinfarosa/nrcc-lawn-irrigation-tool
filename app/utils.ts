@@ -74,6 +74,79 @@ export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
 
+export async function getForecastData({
+  lat,
+  lon,
+}: {
+  lat: number;
+  lon: number;
+}): Promise<any> {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      lat,
+      lon,
+      tzo: -5,
+      sdate: todayForAPI(),
+      edate: "now",
+    }),
+  };
+
+  const res = await fetch(
+    `https://hrly.nrcc.cornell.edu/locHrly`,
+    requestOptions
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+  const data = await res.json();
+  return data;
+}
+
+export function transformForecast(forecast: any) {
+  const { dlyFcstData, hrlyData, hrlyFields, fcstFields, fcstData } = forecast;
+
+  const data = dlyFcstData.slice(0, 3).map((d: string[]) => {
+    return {
+      date: d[0].split("T")[0],
+      weather: d[3],
+      prcp: 0,
+      pop12: [] as number[],
+    };
+  });
+
+  // get cumulative prcp for current day
+  const prcpIdx = hrlyFields.indexOf("prcp");
+  if (prcpIdx > -1) {
+    data[0]["prcp"] = hrlyData
+      .filter((d: string[]) => d[prcpIdx] !== "M")
+      .map((d: string[]) => +d[prcpIdx])
+      .reduce((acc: number, val: number) => acc + val, 0);
+  }
+
+  // forecast data
+  const pop12Idx = fcstFields.indexOf("pop12");
+  const qpfIdx = fcstFields.indexOf("qpf");
+  data.slice(1).forEach((obj: any) => {
+    const day = fcstData.filter(
+      (d: string[]) => d[0].split("T")[0] === obj.date
+    );
+    if (day.length > 0) {
+      for (const hData of day) {
+        const dateTime = hData[0].split(":")[0];
+        const hour = dateTime.split("T")[1];
+        if (hour === "09" || hour === "21") {
+          obj.pop12.push(+hData[pop12Idx]);
+        }
+        obj.prcp += +hData[qpfIdx];
+      }
+    }
+  });
+  return data;
+}
+
 export async function placeIdToLatLon(placeId: string): Promise<{
   address: string;
   lat: number;
@@ -408,6 +481,16 @@ export function getToday(): string {
   const mm = (ddd.getMonth() + 1).toString().padStart(2, "0");
   const dd = ddd.getDate().toString().padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
+}
+
+export function todayForAPI(): string {
+  const dd = new Date();
+  return [
+    dd.getFullYear().toString().padStart(4, "0"),
+    (dd.getMonth() + 1).toString().padStart(2, "0"),
+    dd.getDate().toString().padStart(2, "0"),
+    "00",
+  ].join("");
 }
 
 export function isInBBOX(lat: number, lon: number): boolean {

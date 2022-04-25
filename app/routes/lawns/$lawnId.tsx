@@ -10,7 +10,14 @@ import { deleteLawn } from "~/models/lawn.server";
 import { getLawn } from "~/models/lawn.server";
 import { requireUserId } from "~/session.server";
 import type { PETDATA } from "~/types";
-import { getPET, runModel, getToday, useUser } from "~/utils";
+import {
+  getPET,
+  runModel,
+  getToday,
+  useUser,
+  getForecastData,
+  transformForecast,
+} from "~/utils";
 import Header from "~/components/header";
 import {
   createIrrigation,
@@ -25,6 +32,7 @@ type LoaderData = {
   lawn: Lawn;
   petData: PETDATA;
   irrigationDates: Irrigation[];
+  forecast: any;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -36,6 +44,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("Not Found", { status: 404 });
   }
 
+  const forecast = await getForecastData({
+    lat: lawn.lat,
+    lon: lawn.lng,
+  });
+
   const irrigationDates = await getIrrigations({ lawnId: lawn.id });
   const petData: PETDATA = await getPET({
     year: lawn.year,
@@ -43,7 +56,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     lon: lawn.lng,
   });
 
-  return json<LoaderData>({ lawn, petData, irrigationDates });
+  return json<LoaderData>({ lawn, petData, irrigationDates, forecast });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -81,8 +94,11 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function LawnDetailsPage() {
   const data = useLoaderData() as LoaderData;
-  const { lawn, petData, irrigationDates } = data;
+  const { lawn, petData, irrigationDates, forecast } = data;
   const user = useUser();
+
+  const ciccio = transformForecast(forecast);
+  console.log(ciccio);
 
   // TODO: check the namber below
   const NUMBER_TO_CHECK: number = 0.2; // was 1.6
