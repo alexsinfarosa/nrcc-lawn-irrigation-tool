@@ -97,8 +97,7 @@ export default function LawnDetailsPage() {
   const { lawn, petData, irrigationDates, forecast } = data;
   const user = useUser();
 
-  const ciccio = transformForecast(forecast);
-  console.log(ciccio);
+  const forecastData = transformForecast(forecast);
 
   // TODO: check the namber below
   const NUMBER_TO_CHECK: number = 0.2; // was 1.6
@@ -127,6 +126,12 @@ export default function LawnDetailsPage() {
     a.date < b.date ? 1 : b.date < a.date ? -1 : 0
   );
 
+  let reversedForecastData = [];
+  if (forecastData) {
+    reversedForecastData = forecastData.sort((a, b) =>
+      a.date < b.date ? 1 : b.date < a.date ? -1 : 0
+    );
+  }
   return (
     <>
       <Header lawn={lawn} email={user.email}></Header>
@@ -136,6 +141,7 @@ export default function LawnDetailsPage() {
         sprWater={lawn.sprWater}
         year={lawn.year}
         waterOrdinance={lawn.waterOrdinance}
+        forecastData={reversedForecastData}
       ></Table>
       {waterDeficit.length > 7 && <Graph data={waterDeficit}></Graph>}
     </>

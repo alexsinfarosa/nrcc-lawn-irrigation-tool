@@ -140,7 +140,9 @@ export function transformForecast(forecast: any) {
         if (hour === "09" || hour === "21") {
           obj.pop12.push(+hData[pop12Idx]);
         }
-        obj.prcp += +hData[qpfIdx];
+        if (hData[qpfIdx] !== "M") {
+          obj.prcp += +hData[qpfIdx];
+        }
       }
     }
   });

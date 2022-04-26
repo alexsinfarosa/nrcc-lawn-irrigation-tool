@@ -6,6 +6,7 @@ import isFuture from "date-fns/isFuture";
 import isToday from "date-fns/isToday";
 import { useState } from "react";
 import type { WaterDeficit } from "~/types";
+import WeatherIcon from "./weatherIcon";
 
 export default function Table({
   data,
@@ -13,12 +14,14 @@ export default function Table({
   sprWater,
   year,
   waterOrdinance,
+  forecastData,
 }: {
   data: WaterDeficit[];
   today: WaterDeficit | undefined;
   sprWater: number;
   year: string;
   waterOrdinance: string | null;
+  forecastData: any;
 }) {
   const isThisYear = new Date().getFullYear().toString() === year;
   const isTodayOdd = new Date().getDate() % 2 === 1;
@@ -81,6 +84,7 @@ export default function Table({
                 waterOrdinance={waterOrdinance}
                 isThisYear={isThisYear}
                 sprWater={sprWater}
+                forecastData={forecastData}
               ></Row>
             ))}
           </tbody>
@@ -96,12 +100,14 @@ function Row({
   waterOrdinance,
   isThisYear,
   sprWater,
+  forecastData,
 }: {
   day: WaterDeficit;
   index: number;
   waterOrdinance: string | null;
   isThisYear: boolean;
   sprWater: number;
+  forecastData: any;
 }): JSX.Element {
   const streetNumber = Number(day.date.split("-")[2]);
   const isDayOdd = streetNumber % 2 === 1;
@@ -114,6 +120,7 @@ function Row({
   if (waterOrdinance === "even" && isDayEven) {
     disabled = true;
   }
+  console.log(forecastData);
 
   return (
     <tr key={day.date} className={index % 2 === 0 ? undefined : "bg-gray-50"}>
@@ -148,8 +155,14 @@ function Row({
         }
       >
         {isThisYear && index < 2 && (
-          <span className="inline-flex items-center px-3 py-2 text-sm">
-            72%
+          <span className="inline-flex flex-col items-center px-2 text-sm">
+            <WeatherIcon weather={forecastData[index].weather}></WeatherIcon>
+
+            {forecastData[index].weather.includes("rain") && (
+              <span className="text-xs text-gray-700">
+                {Math.max(...forecastData[index].pop12)}%
+              </span>
+            )}
           </span>
         )}
 

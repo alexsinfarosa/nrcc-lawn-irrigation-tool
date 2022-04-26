@@ -39,7 +39,7 @@ export default function WeatherIcon({ weather }: { weather: string }) {
     <img
       src={found?.icon}
       alt={found?.name}
-      className="inline-block h-5 w-5 text-gray-400"
+      className="inline-block h-7 w-7 text-gray-400"
       aria-hidden="true"
     />
   );
