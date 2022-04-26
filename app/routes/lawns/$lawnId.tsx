@@ -27,6 +27,7 @@ import {
 } from "~/models/irrigation.server";
 
 import Graph from "~/components/graph";
+import ForecastTable from "~/components/forecastTable";
 
 type LoaderData = {
   lawn: Lawn;
@@ -118,7 +119,7 @@ export default function LawnDetailsPage() {
   let slicedWaterDeficit;
   if (todayIdx > -1) {
     today = waterDeficit[todayIdx];
-    slicedWaterDeficit = waterDeficit.slice(todayIdx - 4, todayIdx + 3);
+    slicedWaterDeficit = waterDeficit.slice(todayIdx - 4, todayIdx + 1);
   } else {
     slicedWaterDeficit = waterDeficit;
   }
@@ -126,12 +127,6 @@ export default function LawnDetailsPage() {
     a.date < b.date ? 1 : b.date < a.date ? -1 : 0
   );
 
-  let reversedForecastData = [];
-  if (forecastData) {
-    reversedForecastData = forecastData.sort((a: any, b: any) =>
-      a.date < b.date ? 1 : b.date < a.date ? -1 : 0
-    );
-  }
   return (
     <>
       <Header lawn={lawn} email={user.email}></Header>
@@ -141,7 +136,7 @@ export default function LawnDetailsPage() {
         sprWater={lawn.sprWater}
         year={lawn.year}
         waterOrdinance={lawn.waterOrdinance}
-        forecastData={reversedForecastData}
+        forecast={forecastData}
       ></Table>
       {waterDeficit.length > 7 && <Graph data={waterDeficit}></Graph>}
     </>

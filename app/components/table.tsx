@@ -14,22 +14,22 @@ export default function Table({
   sprWater,
   year,
   waterOrdinance,
-  forecastData,
+  forecast,
 }: {
   data: WaterDeficit[];
   today: WaterDeficit | undefined;
   sprWater: number;
   year: string;
   waterOrdinance: string | null;
-  forecastData: any;
+  forecast: any;
 }) {
   const isThisYear = new Date().getFullYear().toString() === year;
   const isTodayOdd = new Date().getDate() % 2 === 1;
   const isTodayEven = new Date().getDate() % 2 === 0;
   return (
-    <div className="mt-8">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
+    <div className="mt-4 sm:mt-8">
+      <div className="flex flex-col items-center justify-between sm:flex-row">
+        <div className="order-2 mt-6 sm:order-1 sm:mt-0 sm:flex-auto">
           {(isTodayOdd && waterOrdinance === "odd") ||
           (isTodayEven && waterOrdinance === "even") ? (
             <h2 className="text-lg font-medium leading-6 text-gray-900">
@@ -39,19 +39,54 @@ export default function Table({
             <h2 className="text-lg font-medium leading-6 text-gray-900">
               Today's Recommendation:{" "}
               {today && today.shouldWater ? (
-                <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
+                <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-2 py-1 font-medium text-blue-800">
                   Water
                 </span>
               ) : (
-                <span className="inline-flex items-center rounded-md bg-amber-100 px-3 py-1 font-medium text-amber-800">
+                <span className="inline-flex items-center rounded-md bg-amber-100 px-2 py-1 font-medium text-amber-800">
                   Don't water
                 </span>
               )}
             </h2>
           )}
         </div>
+
+        <ul className="mt-4 grid grid-cols-2 gap-6 sm:order-2 sm:mt-0">
+          {forecast.map((item: any) => (
+            <li
+              key={item.date}
+              className="col-span-1 flex rounded-md shadow-sm"
+            >
+              <div
+                className={
+                  "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md bg-gray-100 text-sm font-medium"
+                }
+              >
+                <span className="inline-flex flex-col items-center px-2 text-sm">
+                  <WeatherIcon weather={item.weather}></WeatherIcon>
+
+                  {item.weather.includes("rain") && (
+                    <span className="text-xs text-gray-700">
+                      {Math.max(...item.pop12)}%
+                    </span>
+                  )}
+                </span>
+              </div>
+              <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white">
+                <div className="flex-1 truncate px-4 py-2 text-center text-sm">
+                  <span className="font-medium text-gray-900 hover:text-gray-600">
+                    {format(new Date(item.date), "MMM do")}
+                  </span>
+                  <p className="text-gray-500">
+                    {item.minT}˚ --- {item.maxT}˚
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="-mx-4 mt-8 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
+      <div className="-mx-4 mt-4 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 sm:mt-8 md:mx-0 md:rounded-lg">
         <table className="max-h-[36rem] min-w-full divide-y divide-gray-300">
           <thead className="bg-gray-50">
             <tr>
@@ -84,7 +119,6 @@ export default function Table({
                 waterOrdinance={waterOrdinance}
                 isThisYear={isThisYear}
                 sprWater={sprWater}
-                forecastData={forecastData}
               ></Row>
             ))}
           </tbody>
@@ -98,16 +132,13 @@ function Row({
   day,
   index,
   waterOrdinance,
-  isThisYear,
   sprWater,
-  forecastData,
 }: {
   day: WaterDeficit;
   index: number;
   waterOrdinance: string | null;
   isThisYear: boolean;
   sprWater: number;
-  forecastData: any;
 }): JSX.Element {
   const streetNumber = Number(day.date.split("-")[2]);
   const isDayOdd = streetNumber % 2 === 1;
@@ -129,12 +160,6 @@ function Row({
         ) : (
           format(new Date(day.date), "MMM d")
         )}
-
-        {isFuture(new Date(day.date)) && (
-          <span className="block text-xs font-normal text-gray-500">
-            Forecast
-          </span>
-        )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
         {day.shouldWater ? (
@@ -153,34 +178,18 @@ function Row({
           "whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500"
         }
       >
-        {isThisYear && index < 2 && (
-          <span className="inline-flex flex-col items-center px-2 text-sm">
-            <WeatherIcon weather={forecastData[index].weather}></WeatherIcon>
-
-            {forecastData[index].weather.includes("rain") && (
-              <span className="text-xs text-gray-700">
-                {Math.max(...forecastData[index].pop12)}%
-              </span>
-            )}
+        {disabled ? (
+          <span className="inline-flex px-3 py-1.5 text-xs font-semibold">
+            Water
+            <br />
+            Ordinance
           </span>
-        )}
-
-        {index >= 2 && (
-          <>
-            {disabled ? (
-              <span className="inline-flex px-3 py-1.5 text-xs font-semibold">
-                Water
-                <br />
-                Ordinance
-              </span>
-            ) : (
-              <Toggle
-                watered={day.watered}
-                date={day.date}
-                sprWater={sprWater}
-              ></Toggle>
-            )}
-          </>
+        ) : (
+          <Toggle
+            watered={day.watered}
+            date={day.date}
+            sprWater={sprWater}
+          ></Toggle>
         )}
       </td>
     </tr>
