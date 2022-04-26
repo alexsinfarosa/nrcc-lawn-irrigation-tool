@@ -2,7 +2,6 @@ import { Switch } from "@headlessui/react";
 import { useFetcher } from "@remix-run/react";
 import clsx from "clsx";
 import format from "date-fns/format";
-import isFuture from "date-fns/isFuture";
 import isToday from "date-fns/isToday";
 import { useState } from "react";
 import type { WaterDeficit } from "~/types";

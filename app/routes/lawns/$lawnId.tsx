@@ -27,7 +27,6 @@ import {
 } from "~/models/irrigation.server";
 
 import Graph from "~/components/graph";
-import ForecastTable from "~/components/forecastTable";
 
 type LoaderData = {
   lawn: Lawn;
