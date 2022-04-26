@@ -27,8 +27,8 @@ export default function Table({
   const isTodayEven = new Date().getDate() % 2 === 0;
   return (
     <div className="mt-4 sm:mt-12">
-      <div className="flex flex-col items-center justify-between sm:flex-row">
-        <div className="order-2 mt-6 sm:order-1 sm:mt-0 sm:flex-auto">
+      <div className="flex flex-col items-center justify-between lg:flex-row">
+        <div className="order-2 mt-8 lg:order-1 lg:mt-0 lg:flex-auto">
           {(isTodayOdd && waterOrdinance === "odd") ||
           (isTodayEven && waterOrdinance === "even") ? (
             <h2 className="text-lg font-medium leading-6 text-gray-900">
@@ -50,7 +50,7 @@ export default function Table({
           )}
         </div>
 
-        <ul className="grid grid-cols-2 gap-4 sm:order-2 sm:mt-0 sm:gap-6">
+        <ul className="mt-4 grid grid-cols-2 gap-4 lg:order-2 lg:mt-0 lg:gap-6">
           {forecast.map((item: any) => (
             <li
               key={item.date}
@@ -77,7 +77,7 @@ export default function Table({
                     {format(new Date(item.date), "MMM do")}
                   </span>
                   <p className="text-gray-500">
-                    {item.minT}˚ --- {item.maxT}˚
+                    {item.minT.toFixed(0)}˚ &#8213; {item.maxT.toFixed(0)}˚
                   </p>
                 </div>
               </div>
@@ -85,7 +85,7 @@ export default function Table({
           ))}
         </ul>
       </div>
-      <div className="-mx-4 mt-4 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 sm:mt-8 md:mx-0 md:rounded-lg">
+      <div className="-mx-4 mt-8 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 sm:mt-8 md:mx-0 md:rounded-lg">
         <table className="max-h-[36rem] min-w-full divide-y divide-gray-300">
           <thead className="bg-gray-50">
             <tr>

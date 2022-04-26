@@ -62,7 +62,7 @@ export const action: ActionFunction = async ({ request }) => {
   const isValidLocation = isInBBOX(location.lat, location.lng);
   if (!isValidLocation) {
     return json<ActionData>(
-      { errors: { placeId: "No data is available at this location" } },
+      { errors: { placeId: "Data is not available at this location" } },
       { status: 400 }
     );
   }
@@ -149,7 +149,7 @@ export default function NewFieldPage() {
 
   return (
     <>
-      <div className="px-4 sm:mx-auto sm:max-w-xl sm:px-6 md:px-8">
+      <div className="py-10 px-4 sm:mx-auto sm:max-w-xl sm:py-0 sm:px-6 md:px-8">
         <h1 className="text-2xl font-semibold text-gray-900">
           Create New Lawn
         </h1>
