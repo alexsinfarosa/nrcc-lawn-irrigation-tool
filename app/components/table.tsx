@@ -26,7 +26,7 @@ export default function Table({
   const isTodayOdd = new Date().getDate() % 2 === 1;
   const isTodayEven = new Date().getDate() % 2 === 0;
   return (
-    <div className="mt-4 sm:mt-8">
+    <div className="mt-4 sm:mt-12">
       <div className="flex flex-col items-center justify-between sm:flex-row">
         <div className="order-2 mt-6 sm:order-1 sm:mt-0 sm:flex-auto">
           {(isTodayOdd && waterOrdinance === "odd") ||
@@ -50,7 +50,7 @@ export default function Table({
           )}
         </div>
 
-        <ul className="mt-4 grid grid-cols-2 gap-6 sm:order-2 sm:mt-0">
+        <ul className="grid grid-cols-2 gap-4 sm:order-2 sm:mt-0 sm:gap-6">
           {forecast.map((item: any) => (
             <li
               key={item.date}
@@ -61,7 +61,7 @@ export default function Table({
                   "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md bg-gray-100 text-sm font-medium"
                 }
               >
-                <span className="inline-flex flex-col items-center px-2 text-sm">
+                <span className="inline-flex flex-col items-center px-2">
                   <WeatherIcon weather={item.weather}></WeatherIcon>
 
                   {item.weather.includes("rain") && (
@@ -72,7 +72,7 @@ export default function Table({
                 </span>
               </div>
               <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white">
-                <div className="flex-1 truncate px-4 py-2 text-center text-sm">
+                <div className="flex-1  px-2 py-2 text-center text-sm sm:px-4">
                   <span className="font-medium text-gray-900 hover:text-gray-600">
                     {format(new Date(item.date), "MMM do")}
                   </span>

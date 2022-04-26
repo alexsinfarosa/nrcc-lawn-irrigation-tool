@@ -15,9 +15,9 @@ import { Fragment } from "react";
 
 export default function Header({ lawn, email }: { lawn: Lawn; email: string }) {
   return (
-    <div className="border-b border-gray-200 pb-5">
+    <div className="sm:border-b sm:border-gray-200 sm:pb-5">
       <div className="sm:flex sm:items-baseline sm:justify-between">
-        <div className="sm:w-0 sm:flex-1">
+        <div className="hidden sm:block sm:w-0 sm:flex-1">
           <h1
             id="lawn-name"
             className="max-w-xs text-2xl font-semibold text-gray-900 sm:text-3xl"
@@ -89,7 +89,7 @@ export default function Header({ lawn, email }: { lawn: Lawn; email: string }) {
                             active
                               ? "bg-gray-100 text-gray-900"
                               : "text-gray-700",
-                            "group flex items-center px-4 py-2 text-sm"
+                            "group flex w-full items-center px-4 py-2 text-sm"
                           )}
                         >
                           <PlusIcon
