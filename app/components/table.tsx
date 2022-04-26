@@ -120,7 +120,6 @@ function Row({
   if (waterOrdinance === "even" && isDayEven) {
     disabled = true;
   }
-  console.log(forecastData);
 
   return (
     <tr key={day.date} className={index % 2 === 0 ? undefined : "bg-gray-50"}>

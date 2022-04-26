@@ -36,11 +36,13 @@ export default function WeatherIcon({ weather }: { weather: string }) {
   let found = icons.find((i) => i.name === name);
 
   return (
-    <img
-      src={found?.icon}
-      alt={found?.name}
-      className="inline-block h-7 w-7 text-gray-400"
-      aria-hidden="true"
-    />
+    <span className="inline-flex h-7 w-7 items-center justify-center text-gray-500">
+      <img
+        src={found?.icon}
+        alt={found?.name}
+        className="h-full w-full"
+        aria-hidden="true"
+      />
+    </span>
   );
 }

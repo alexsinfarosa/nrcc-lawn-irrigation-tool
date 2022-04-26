@@ -146,6 +146,7 @@ export function transformForecast(forecast: any) {
       }
     }
   });
+
   return data;
 }
 

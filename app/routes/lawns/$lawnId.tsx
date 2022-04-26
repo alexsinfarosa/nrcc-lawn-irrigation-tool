@@ -128,7 +128,7 @@ export default function LawnDetailsPage() {
 
   let reversedForecastData = [];
   if (forecastData) {
-    reversedForecastData = forecastData.sort((a, b) =>
+    reversedForecastData = forecastData.sort((a: any, b: any) =>
       a.date < b.date ? 1 : b.date < a.date ? -1 : 0
     );
   }
