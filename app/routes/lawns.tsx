@@ -224,7 +224,7 @@ export default function Example() {
               )}
             </nav>
           </div>
-          <div className="flex flex-shrink-0 flex-col p-4">
+          {/* <div className="flex flex-shrink-0 flex-col p-4">
             <Form
               action="/logout"
               method="post"
@@ -238,7 +238,7 @@ export default function Example() {
                 Logout
               </button>
             </Form>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex flex-1 flex-col md:pl-64">

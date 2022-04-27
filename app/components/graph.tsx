@@ -22,24 +22,11 @@ export default function Graph({ data }: { data: any }) {
   return (
     <>
       <div className="mt-12 sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h2 className="text-lg font-medium leading-6 text-gray-900">
-            Water Deficit for the last {dataLength} days
-          </h2>
-        </div>
-        <div className="mt-1 space-x-2 sm:mt-0">
-          <span className="bg-blue-500 px-2 py-1 text-sm font-medium text-white">
-            Wet
-          </span>
-          <span className="bg-amber-500 px-2 py-1 text-sm font-medium text-white">
-            Dry
-          </span>
-          <span className="bg-emerald-600 px-2 py-1 text-sm font-medium text-white">
-            Watered
-          </span>
-        </div>
+        <h2 className="font-medium text-gray-900 sm:text-lg sm:leading-6">
+          Water Deficit for the last {dataLength} days
+        </h2>
       </div>
-      <div className="mt-6 h-80 w-full bg-white sm:-mx-6 sm:mt-10 sm:shadow md:mx-0 md:rounded-lg">
+      <div className="mt-2 h-80 w-full bg-gray-50 sm:-mx-6 sm:mt-6 sm:shadow md:mx-0 md:rounded-lg">
         <ResponsiveContainer>
           <BarChart
             data={data.slice(-30)}
@@ -88,6 +75,18 @@ export default function Graph({ data }: { data: any }) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      <div className="mt-2 flex justify-center space-x-2">
+        <span className="bg-blue-500 p-1 text-xs font-medium text-white sm:px-2 sm:text-sm">
+          Wet
+        </span>
+        <span className="bg-amber-500 p-1 text-xs font-medium text-white sm:px-2 sm:text-sm">
+          Dry
+        </span>
+        <span className="bg-emerald-600 p-1 text-xs font-medium text-white sm:px-2 sm:text-sm">
+          Watered
+        </span>
       </div>
     </>
   );

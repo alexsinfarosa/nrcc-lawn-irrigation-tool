@@ -1,4 +1,8 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
@@ -15,6 +19,13 @@ import SelectSprinkler from "~/components/select-sprinkler";
 import { isInBBOX, placeIdToLatLon } from "~/utils";
 import { calculateWaterAmount } from "~/utils";
 import { createIrrigation } from "~/models/irrigation.server";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "New Lawn",
+    description: "Create a new lawn",
+  };
+};
 
 type ActionData = {
   errors?: {
@@ -294,6 +305,8 @@ export default function NewFieldPage() {
               type="date"
               name="irrigationDate"
               id="irrigation-date"
+              min={`${new Date().getFullYear()}-03-01`}
+              max={new Date().toISOString().split("T")[0]}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
           </div>

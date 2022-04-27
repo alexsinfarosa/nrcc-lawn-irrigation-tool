@@ -27,30 +27,11 @@ export default function Table({
   const isTodayEven = new Date().getDate() % 2 === 0;
   return (
     <div className="mt-4 sm:mt-12">
-      <div className="flex flex-col items-center justify-between lg:flex-row">
-        <div className="order-2 mt-8 lg:order-1 lg:mt-0 lg:flex-auto">
-          {(isTodayOdd && waterOrdinance === "odd") ||
-          (isTodayEven && waterOrdinance === "even") ? (
-            <h2 className="text-lg font-medium leading-6 text-gray-900">
-              Today is Not Allowed To Water - (water ordinance)
-            </h2>
-          ) : (
-            <h2 className="text-lg font-medium leading-6 text-gray-900">
-              Today's Recommendation:{" "}
-              {today && today.shouldWater ? (
-                <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-2 py-1 font-medium text-blue-800">
-                  Water
-                </span>
-              ) : (
-                <span className="inline-flex items-center rounded-md bg-amber-100 px-2 py-1 font-medium text-amber-800">
-                  Don't water
-                </span>
-              )}
-            </h2>
-          )}
-        </div>
-
-        <ul className="mt-4 grid grid-cols-2 gap-4 lg:order-2 lg:mt-0 lg:gap-6">
+      <div className="mt-6 flex items-center justify-center sm:mt-4 sm:justify-end sm:space-x-4">
+        <h2 className="hidden text-left font-medium leading-6 text-gray-500 sm:block">
+          FORECAST:
+        </h2>
+        <ul className="grid grid-cols-2 gap-4 lg:gap-6">
           {forecast.map((item: any) => (
             <li
               key={item.date}
@@ -85,7 +66,30 @@ export default function Table({
           ))}
         </ul>
       </div>
-      <div className="-mx-4 mt-8 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 sm:mt-8 md:mx-0 md:rounded-lg">
+
+      <div className="mt-6 sm:mt-12 lg:flex-auto">
+        {(isTodayOdd && waterOrdinance === "odd") ||
+        (isTodayEven && waterOrdinance === "even") ? (
+          <h2 className="font-medium text-gray-900 sm:text-lg sm:leading-6">
+            Today is Not Allowed To Water - (water ordinance)
+          </h2>
+        ) : (
+          <h2 className="font-medium text-gray-900 sm:text-lg sm:leading-6">
+            Today's Recommendation:{" "}
+            {today && today.shouldWater ? (
+              <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-2 py-1 font-medium text-blue-800">
+                Water
+              </span>
+            ) : (
+              <span className="inline-flex items-center rounded-md bg-amber-100 px-2 py-1 font-medium text-amber-800">
+                Don't water
+              </span>
+            )}
+          </h2>
+        )}
+      </div>
+
+      <div className="-mx-4 mt-2 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 sm:mt-6 md:mx-0 md:rounded-lg">
         <table className="max-h-[36rem] min-w-full divide-y divide-gray-300">
           <thead className="bg-gray-50">
             <tr>
