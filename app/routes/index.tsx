@@ -6,7 +6,7 @@ import logoIcon from "~/images/logo.png";
 export default function Index() {
   const user = useOptionalUser();
   return (
-    <div className="bg-white py-16 sm:py-24">
+    <div className="-my-4 -mx-4 bg-white sm:py-24">
       <div className="relative sm:py-16">
         <div aria-hidden="true" className="hidden sm:block">
           <div className="absolute inset-y-0 left-0 w-1/2 rounded-r-3xl bg-blue-100" />

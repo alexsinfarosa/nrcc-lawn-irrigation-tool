@@ -4,7 +4,7 @@ import logo from "~/images/logo.png";
 
 export default function LawnIndexPage() {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center py-10 px-4 sm:mx-auto sm:max-w-xl sm:py-0 sm:px-6 md:px-8">
       <img src={logo} alt="logo" className="w-32 " />
       <p className="mt-9">No lawn selected. Select a lawn on the left, or </p>
       <div className="my-9 flex justify-center">

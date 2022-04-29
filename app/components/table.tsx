@@ -67,7 +67,7 @@ export default function Table({
         </ul>
       </div>
 
-      <div className="mt-6 sm:mt-12 lg:flex-auto">
+      <div className="mt-10 sm:mt-12 lg:flex-auto">
         {(isTodayOdd && waterOrdinance === "odd") ||
         (isTodayEven && waterOrdinance === "even") ? (
           <h2 className="font-medium text-gray-900 sm:text-lg sm:leading-6">

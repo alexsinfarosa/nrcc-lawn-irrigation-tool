@@ -168,7 +168,7 @@ export default function NewFieldPage() {
 
       <Form
         method="post"
-        className="mt-5 w-full space-y-8 px-4 sm:mx-auto sm:max-w-xl sm:px-6 md:px-8"
+        className="mb-10 w-full space-y-8 px-4 sm:mx-auto sm:mb-0 sm:mt-5 sm:max-w-xl sm:px-6 md:px-8"
       >
         <div>
           <label
