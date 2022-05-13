@@ -2,7 +2,6 @@ import { Switch } from "@headlessui/react";
 import { useFetcher } from "@remix-run/react";
 import clsx from "clsx";
 import format from "date-fns/format";
-import isFuture from "date-fns/isFuture";
 import isToday from "date-fns/isToday";
 import { useState } from "react";
 import type { WaterDeficit } from "~/types";
@@ -14,44 +13,83 @@ export default function Table({
   sprWater,
   year,
   waterOrdinance,
-  forecastData,
+  forecast,
 }: {
   data: WaterDeficit[];
   today: WaterDeficit | undefined;
   sprWater: number;
   year: string;
   waterOrdinance: string | null;
-  forecastData: any;
+  forecast: any;
 }) {
   const isThisYear = new Date().getFullYear().toString() === year;
   const isTodayOdd = new Date().getDate() % 2 === 1;
   const isTodayEven = new Date().getDate() % 2 === 0;
   return (
-    <div className="mt-8">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          {(isTodayOdd && waterOrdinance === "odd") ||
-          (isTodayEven && waterOrdinance === "even") ? (
-            <h2 className="text-lg font-medium leading-6 text-gray-900">
-              Today is Not Allowed To Water - (water ordinance)
-            </h2>
-          ) : (
-            <h2 className="text-lg font-medium leading-6 text-gray-900">
-              Today's Recommendation:{" "}
-              {today && today.shouldWater ? (
-                <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-3 py-1 font-medium text-blue-800">
-                  Water
+    <div className="mt-4 sm:mt-12">
+      <div className="mt-6 flex items-center justify-center sm:mt-4 sm:justify-end sm:space-x-4">
+        <h2 className="hidden text-left font-medium leading-6 text-gray-500 sm:block">
+          FORECAST:
+        </h2>
+        <ul className="grid grid-cols-2 gap-4 lg:gap-6">
+          {forecast.map((item: any) => (
+            <li
+              key={item.date}
+              className="col-span-1 flex rounded-md shadow-sm"
+            >
+              <div
+                className={
+                  "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md bg-gray-100 text-sm font-medium"
+                }
+              >
+                <span className="inline-flex flex-col items-center px-2">
+                  <WeatherIcon weather={item.weather}></WeatherIcon>
+
+                  {item.weather.includes("rain") && (
+                    <span className="text-xs text-gray-700">
+                      {Math.max(...item.pop12)}%
+                    </span>
+                  )}
                 </span>
-              ) : (
-                <span className="inline-flex items-center rounded-md bg-amber-100 px-3 py-1 font-medium text-amber-800">
-                  Don't water
-                </span>
-              )}
-            </h2>
-          )}
-        </div>
+              </div>
+              <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white">
+                <div className="flex-1  px-2 py-2 text-center text-sm sm:px-4">
+                  <span className="font-medium text-gray-900 hover:text-gray-600">
+                    {format(new Date(item.date), "MMM do")}
+                  </span>
+                  <p className="text-gray-500">
+                    {item.minT.toFixed(0)}˚ &#8213; {item.maxT.toFixed(0)}˚
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="-mx-4 mt-8 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
+
+      <div className="mt-10 sm:mt-12 lg:flex-auto">
+        {(isTodayOdd && waterOrdinance === "odd") ||
+        (isTodayEven && waterOrdinance === "even") ? (
+          <h2 className="font-medium text-gray-900 sm:text-lg sm:leading-6">
+            Today is Not Allowed To Water - (water ordinance)
+          </h2>
+        ) : (
+          <h2 className="font-medium text-gray-900 sm:text-lg sm:leading-6">
+            Today's Recommendation:{" "}
+            {today && today.shouldWater ? (
+              <span className="inline-flex animate-pulse items-center rounded-md bg-blue-100 px-2 py-1 font-medium text-blue-800">
+                Water
+              </span>
+            ) : (
+              <span className="inline-flex items-center rounded-md bg-amber-100 px-2 py-1 font-medium text-amber-800">
+                Don't water
+              </span>
+            )}
+          </h2>
+        )}
+      </div>
+
+      <div className="-mx-4 mt-2 max-h-[36rem] overflow-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 sm:mt-6 md:mx-0 md:rounded-lg">
         <table className="max-h-[36rem] min-w-full divide-y divide-gray-300">
           <thead className="bg-gray-50">
             <tr>
@@ -84,7 +122,6 @@ export default function Table({
                 waterOrdinance={waterOrdinance}
                 isThisYear={isThisYear}
                 sprWater={sprWater}
-                forecastData={forecastData}
               ></Row>
             ))}
           </tbody>
@@ -98,16 +135,13 @@ function Row({
   day,
   index,
   waterOrdinance,
-  isThisYear,
   sprWater,
-  forecastData,
 }: {
   day: WaterDeficit;
   index: number;
   waterOrdinance: string | null;
   isThisYear: boolean;
   sprWater: number;
-  forecastData: any;
 }): JSX.Element {
   const streetNumber = Number(day.date.split("-")[2]);
   const isDayOdd = streetNumber % 2 === 1;
@@ -129,12 +163,6 @@ function Row({
         ) : (
           format(new Date(day.date), "MMM d")
         )}
-
-        {isFuture(new Date(day.date)) && (
-          <span className="block text-xs font-normal text-gray-500">
-            Forecast
-          </span>
-        )}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
         {day.shouldWater ? (
@@ -153,34 +181,18 @@ function Row({
           "whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500"
         }
       >
-        {isThisYear && index < 2 && (
-          <span className="inline-flex flex-col items-center px-2 text-sm">
-            <WeatherIcon weather={forecastData[index].weather}></WeatherIcon>
-
-            {forecastData[index].weather.includes("rain") && (
-              <span className="text-xs text-gray-700">
-                {Math.max(...forecastData[index].pop12)}%
-              </span>
-            )}
+        {disabled ? (
+          <span className="inline-flex px-3 py-1.5 text-xs font-semibold">
+            Water
+            <br />
+            Ordinance
           </span>
-        )}
-
-        {index >= 2 && (
-          <>
-            {disabled ? (
-              <span className="inline-flex px-3 py-1.5 text-xs font-semibold">
-                Water
-                <br />
-                Ordinance
-              </span>
-            ) : (
-              <Toggle
-                watered={day.watered}
-                date={day.date}
-                sprWater={sprWater}
-              ></Toggle>
-            )}
-          </>
+        ) : (
+          <Toggle
+            watered={day.watered}
+            date={day.date}
+            sprWater={sprWater}
+          ></Toggle>
         )}
       </td>
     </tr>

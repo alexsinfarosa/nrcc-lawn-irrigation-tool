@@ -106,9 +106,9 @@ export async function getForecastData({
 }
 
 export function transformForecast(forecast: any) {
-  const { dlyFcstData, hrlyData, hrlyFields, fcstFields, fcstData } = forecast;
+  const { dlyFcstData, fcstFields, fcstData } = forecast;
 
-  const data = dlyFcstData.slice(0, 3).map((d: string[]) => {
+  const data = dlyFcstData.slice(1, 3).map((d: string[]) => {
     return {
       date: d[0].split("T")[0],
       weather: d[3],
@@ -117,22 +117,18 @@ export function transformForecast(forecast: any) {
     };
   });
 
-  // get cumulative prcp for current day
-  const prcpIdx = hrlyFields.indexOf("prcp");
-  if (prcpIdx > -1) {
-    data[0]["prcp"] = hrlyData
-      .filter((d: string[]) => d[prcpIdx] !== "M")
-      .map((d: string[]) => +d[prcpIdx])
-      .reduce((acc: number, val: number) => acc + val, 0);
-  }
-
   // forecast data
   const pop12Idx = fcstFields.indexOf("pop12");
   const qpfIdx = fcstFields.indexOf("qpf");
-  data.slice(1).forEach((obj: any) => {
+  const tempIdx = fcstFields.indexOf("temp");
+  data.forEach((obj: any) => {
     const day = fcstData.filter(
       (d: string[]) => d[0].split("T")[0] === obj.date
     );
+    const temps = day
+      .filter((t: string) => t !== "M")
+      .map((d: string[]) => +d[tempIdx]);
+
     if (day.length > 0) {
       for (const hData of day) {
         const dateTime = hData[0].split(":")[0];
@@ -143,6 +139,8 @@ export function transformForecast(forecast: any) {
         if (hData[qpfIdx] !== "M") {
           obj.prcp += +hData[qpfIdx];
         }
+        obj.minT = Math.min(...temps);
+        obj.maxT = Math.max(...temps);
       }
     }
   });

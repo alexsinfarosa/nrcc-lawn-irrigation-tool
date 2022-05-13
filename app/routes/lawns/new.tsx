@@ -1,4 +1,8 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
@@ -15,6 +19,13 @@ import SelectSprinkler from "~/components/select-sprinkler";
 import { isInBBOX, placeIdToLatLon } from "~/utils";
 import { calculateWaterAmount } from "~/utils";
 import { createIrrigation } from "~/models/irrigation.server";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "New Lawn",
+    description: "Create a new lawn",
+  };
+};
 
 type ActionData = {
   errors?: {
@@ -62,7 +73,7 @@ export const action: ActionFunction = async ({ request }) => {
   const isValidLocation = isInBBOX(location.lat, location.lng);
   if (!isValidLocation) {
     return json<ActionData>(
-      { errors: { placeId: "No data is available at this location" } },
+      { errors: { placeId: "Data is not available at this location" } },
       { status: 400 }
     );
   }
@@ -149,7 +160,7 @@ export default function NewFieldPage() {
 
   return (
     <>
-      <div className="px-4 sm:mx-auto sm:max-w-xl sm:px-6 md:px-8">
+      <div className="py-10 px-4 sm:mx-auto sm:max-w-xl sm:py-0 sm:px-6 md:px-8">
         <h1 className="text-2xl font-semibold text-gray-900">
           Create New Lawn
         </h1>
@@ -157,7 +168,7 @@ export default function NewFieldPage() {
 
       <Form
         method="post"
-        className="mt-5 w-full space-y-8 px-4 sm:mx-auto sm:max-w-xl sm:px-6 md:px-8"
+        className="mb-10 w-full space-y-8 px-4 sm:mx-auto sm:mb-0 sm:mt-5 sm:max-w-xl sm:px-6 md:px-8"
       >
         <div>
           <label
@@ -294,6 +305,8 @@ export default function NewFieldPage() {
               type="date"
               name="irrigationDate"
               id="irrigation-date"
+              min={`${new Date().getFullYear()}-03-01`}
+              max={new Date().toISOString().split("T")[0]}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
           </div>

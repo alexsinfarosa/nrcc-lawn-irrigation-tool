@@ -224,7 +224,7 @@ export default function Example() {
               )}
             </nav>
           </div>
-          <div className="flex flex-shrink-0 flex-col p-4">
+          {/* <div className="flex flex-shrink-0 flex-col p-4">
             <Form
               action="/logout"
               method="post"
@@ -238,7 +238,7 @@ export default function Example() {
                 Logout
               </button>
             </Form>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex flex-1 flex-col md:pl-64">
@@ -253,10 +253,10 @@ export default function Example() {
           </button>
         </div>
         <main className="flex-1">
-          <div className="py-6">
+          <div className="sm:py-6">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
               {/* Replace with your content */}
-              <div className="py-4">
+              <div className="sm:py-4">
                 <Outlet />
               </div>
               {/* /End replace */}
